@@ -12,20 +12,9 @@ class Movie {
 
 class UI {
   static displayMovies() {
-    const StorageMovies = [
-      {
-        title: "Titanic",
-        gender: "Drama",
-        rate: 5,
-      },
-      {
-        title: "The Fast and Furious",
-        gender: "Action",
-        rate: 4,
-      },
-    ];
+    
 
-    const movies = StorageMovies;
+    const movies = Store.getMovies();
 
     movies.forEach((movie) => UI.addMovieToList(movie));
   }
@@ -122,10 +111,14 @@ document.querySelector("#movie-form").addEventListener("submit", (e) => {
   } else {
     //Instatiate movie
     const movie = new Movie(title, gender, rate);
-    console.log(movie);
+    
 
     //Add movie to UI
     UI.addMovieToList(movie);
+
+    //add movie to Store
+
+    Store.addMovie(movie)
 
     //succes message
     UI.alertsMessage("Movie added", "success");
