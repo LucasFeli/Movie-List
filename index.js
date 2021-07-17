@@ -43,9 +43,6 @@ class UI {
     list.appendChild(row);
   }
 
-
-
-
   static deleteMovie(elem) {
     if (elem.classList.contains("delete")) {
       elem.parentElement.parentElement.remove();
@@ -54,12 +51,16 @@ class UI {
 
   static alertsMessage(message, className) {
     const div = document.createElement("div");
-    div.className=`alert alert-${className}`;
-    div.appendChild(document.createTextNode(message))
+    div.className = `alert alert-${className}`;
+    div.appendChild(document.createTextNode(message));
     const container = document.querySelector(".container");
-    const form = document.querySelector("#movie-form")
-    container.insertBefore(div, form)
-}
+    const form = document.querySelector("#movie-form");
+    container.insertBefore(div, form);
+
+    //show up 3 seconds
+
+    setTimeout(() => document.querySelector(".alert").remove(), 3000);
+  }
 
   static clearInputs() {
     document.querySelector("#title").value = "";
@@ -69,6 +70,37 @@ class UI {
 }
 
 //Storage
+
+class Store {
+  static getMovies() {
+    let movies;
+    if (localStorage.getItem("movies") === null) {
+      movies = [];
+    } else {
+      movies = JSON.parse(localStorage.getItem("movies"));
+    }
+
+    return movies;
+  }
+
+  static addMovie(movie) {
+    const movies = Store.getMovies();
+
+    movies.push(movie);
+
+    localStorage.setItem("movies", JSON.stringify(movies));
+  }
+
+  static removeMovie(gender) {
+    const Movies = Store.getMovies();
+    movies.forEach((movie, index) => {
+      if (movie.gender === gender) {
+        movies.splice(index, 1);
+      }
+    });
+    localStorage.setItem("movies", JSON.stringify(books));
+  }
+}
 
 //Event: dysplay movies
 
@@ -86,7 +118,7 @@ document.querySelector("#movie-form").addEventListener("submit", (e) => {
   //Validate title
 
   if (title === "" || gender === "" || rate === "") {
-      UI.alertsMessage("Please fill in all inputs", "danger")
+    UI.alertsMessage("Please fill in all inputs", "danger");
   } else {
     //Instatiate movie
     const movie = new Movie(title, gender, rate);
@@ -95,6 +127,8 @@ document.querySelector("#movie-form").addEventListener("submit", (e) => {
     //Add movie to UI
     UI.addMovieToList(movie);
 
+    //succes message
+    UI.alertsMessage("Movie added", "success");
     //clear inputs
     UI.clearInputs();
   }
@@ -103,4 +137,7 @@ document.querySelector("#movie-form").addEventListener("submit", (e) => {
 //Event : remove a Movie
 document.querySelector("#movie-list").addEventListener("click", (e) => {
   UI.deleteMovie(e.target);
+
+  //remove message
+  UI.alertsMessage("Movie Removed", "success");
 });
