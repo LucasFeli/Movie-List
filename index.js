@@ -80,14 +80,14 @@ class Store {
     localStorage.setItem("movies", JSON.stringify(movies));
   }
 
-  static removeMovie(gender) {
-    const Movies = Store.getMovies();
+  static removeMovie(rate) {
+    const movies = Store.getMovies();
     movies.forEach((movie, index) => {
-      if (movie.gender === gender) {
+      if (movie.rate === rate) {
         movies.splice(index, 1);
       }
     });
-    localStorage.setItem("movies", JSON.stringify(books));
+    localStorage.setItem("movies", JSON.stringify(movies));
   }
 }
 
@@ -129,8 +129,14 @@ document.querySelector("#movie-form").addEventListener("submit", (e) => {
 
 //Event : remove a Movie
 document.querySelector("#movie-list").addEventListener("click", (e) => {
-  UI.deleteMovie(e.target);
+  
+  //Remove movie from UI
+    UI.deleteMovie(e.target);
+
+     //Remove movie from Store
+    Store.removeMovie(e.target.parentElement.previousElementSibling.innerText)
+
 
   //remove message
-  UI.alertsMessage("Movie Removed", "success");
+  UI.alertsMessage("Movie Removed", "info");
 });
